@@ -36,7 +36,7 @@ def test_convert_single_file_to_csv(converter):
 
     mocked_read_excel.assert_called_once_with(Path('file.xlsx'), engine='openpyxl')
     path_destination_file: Path = path_destination_folder / 'aggregated_annotation.csv'
-    mocked_read_excel.return_value.to_csv.assert_called_once_with(path_destination_file, index=None, header=True)
+    mocked_read_excel.return_value.to_csv.assert_called_once_with(path_destination_file, index=False, header=True)
 
 
 def test_find_xlsx_files_in_source_folder(converter):

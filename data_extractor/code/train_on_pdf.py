@@ -29,17 +29,16 @@ source_annotation = None
 source_mapping = None
 folder_text_3434 = None
 folder_relevance = None
-project_prefix = None
 s3_usage = None
 s3c_main = None
 s3c_interim = None
-project_prefix = None
+project_prefix: str = ''
 
 
 
 
 
-def main():
+def main() -> None:
     s3_settings: S3Settings = get_s3_settings()
     main_settings: MainSettings = get_main_settings()
 
@@ -95,14 +94,14 @@ def main():
     router = Router(main_settings, s3_settings, project_paths)
 
     create_folder(Path(project_data_dir))
-    s3c_main = None
-    s3c_interim = None
+    s3c_main = S3Communication(None, None, None, None)
+    s3c_interim = S3Communication(None, None, None, None)
     if s3_usage:
         # Opening s3 settings file
         s3_settings_path = str(project_paths.PATH_FOLDER_DATA) + r'/' + 's3_settings.yaml'
         f = open(s3_settings_path, 'r')
-        s3_settings = yaml.safe_load(f)
-        s3_settings = S3Settings(**s3_settings)
+        loaded_settings = yaml.safe_load(f)
+        s3_settings = S3Settings(**loaded_settings)
         f.close()
         project_prefix = s3_settings.prefix + "/" + project_name + '/data'
         # init s3 connector
@@ -168,7 +167,8 @@ def main():
             if path_source_extraction.exists():
                 link_extracted_files(path_source_extraction, project_paths.path_folder_source_pdf, project_paths.path_folder_destination_extraction)
         
-        download_data_from_s3_main_bucket_to_local_folder_if_required(s3c_main, source_annotation, 
+        download_data_from_s3_main_bucket_to_local_folder_if_required(s3c_main, 
+                                                                      project_paths.path_folder_source_annotation, 
                                                                       Path(s3_settings.prefix) / Path('input/annotations'), 
                                                                       project_settings)
         converter.convert()
@@ -187,9 +187,9 @@ def main():
                 destination_extraction_data = project_data_dir + r'/output/TEXT_EXTRACTION'
                 if s3_usage:
                     s3c_interim.download_files_in_prefix_to_dir(project_prefix + '/interim/ml/extraction', 
-                                                                source_extraction_data, project_settings)
+                                                                source_extraction_data)
                     s3c_main.upload_files_in_dir_to_prefix(source_extraction_data, 
-                                                           project_prefix + '/output/TEXT_EXTRACTION', project_settings)
+                                                           project_prefix + '/output/TEXT_EXTRACTION')
                 else:
                     os.makedirs(destination_extraction_data, exist_ok=True)
                     end_to_end_response = copy_file_without_overwrite(str(source_extraction_data),
@@ -210,7 +210,8 @@ def main():
                         _ = objects.delete()
                 
             if end_to_end_response:
-                save_train_info(project_name, s3_usage, s3c_main)
+                save_train_info(project_name, s3_usage=s3_usage, s3c_main=s3c_main, main_settings=main_settings,
+                                s3_settings=s3_settings, project_paths=project_paths)
                 print("End-to-end inference complete")
 
     except Exception as e:

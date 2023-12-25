@@ -1,5 +1,5 @@
 from pydantic import Field, ConfigDict
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
 
@@ -53,7 +53,7 @@ class Processor(BaseSettings):
     proc_metric: str = 'acc'
 
 class Model(BaseSettings):
-    model_config = ConfigDict(protected_namespaces=('settings_',))
+    model_config = SettingsConfigDict(protected_namespaces=('settings_',))
     model_layer_dims: List[int] = [768, 2]
     model_lm_output_types: List[str] = ['per_sequence']
     
@@ -186,20 +186,18 @@ _current_settings_s3: S3Settings | None = None
 def get_main_settings() -> MainSettings:
     if _current_settings_main is None:
         setup_main_settings()
-        return _current_settings_main
-    else:
-        return _current_settings_main
+    assert _current_settings_main is not None
+    return _current_settings_main
         
-def setup_main_settings():
+def setup_main_settings() -> None:
     global _current_settings_main
     _current_settings_main = MainSettings()
     
 def get_s3_settings() -> S3Settings:
     if _current_settings_s3 is None:
         setup_s3_settings()
-        return _current_settings_s3
-    else:
-        return _current_settings_s3
+    assert _current_settings_s3 is not None
+    return _current_settings_s3
         
 def setup_s3_settings():
     global _current_settings_s3

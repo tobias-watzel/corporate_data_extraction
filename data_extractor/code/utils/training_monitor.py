@@ -3,7 +3,7 @@ from pathlib import Path
 class TrainingMonitor:
     """Class for a simple monitoring of a training process
     """
-    def __init__(self: 'TrainingMonitor', path_file_running=None) -> 'TrainingMonitor':
+    def __init__(self, path_file_running=None) -> None:
         self.path_file_running: Path = path_file_running if path_file_running is not None else self._set_default_path()
     
     @staticmethod

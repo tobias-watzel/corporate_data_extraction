@@ -23,7 +23,7 @@ class ProjectPaths(BaseSettings):
     _string_project_name: str
     _path_project_data_folder: Path
     _path_project_model_folder: Path
-    _main_settings: Settings
+    _main_settings: MainSettings
     
     path_folder_source_pdf: Path = Field(default=Path('input/pdfs/training'))
     path_folder_source_annotation: Path = Field(default=Path('input/annotations'))
@@ -44,7 +44,7 @@ class ProjectPaths(BaseSettings):
 
     def __init__(self, 
                  string_project_name: str,
-                 main_settings: Settings,
+                 main_settings: MainSettings,
                  **kwargs):
         super().__init__(**kwargs)
         if not isinstance(string_project_name, str):
@@ -52,7 +52,7 @@ class ProjectPaths(BaseSettings):
         self._string_project_name: str = string_project_name
         self._path_project_data_folder: Path = self._PATH_FOLDER_DATA / Path(string_project_name)
         self._path_project_model_folder: Path = self._PATH_FOLDER_MODEL / Path(string_project_name)
-        self._main_settings: Settings = main_settings
+        self._main_settings: MainSettings = main_settings
         self._update_all_paths_depending_on_path_project_data_folder()
         self._update_all_paths_depending_on_path_project_model_folder()
 
@@ -80,8 +80,13 @@ class ProjectPaths(BaseSettings):
         return self._path_project_model_folder
 
     @property
-    def main_settings(self) -> Settings:
+    def main_settings(self) -> MainSettings:
         return self._main_settings
+    
+    @main_settings.setter
+    def main_settings(self, main_settings_new: MainSettings) -> None:
+        self._main_settings: MainSettings = main_settings_new
+        self._update_all_paths_depending_on_path_project_model_folder()
     
     @property
     def PATH_FOLDER_ROOT(self) -> Path:
@@ -102,11 +107,6 @@ class ProjectPaths(BaseSettings):
     @property
     def PYTHON_EXECUTABLE(self) -> str:
         return self._PYTHON_EXECUTABLE
-    
-    @main_settings.setter
-    def main_settings(self, main_settings_new: Settings) -> None:
-        self._main_settings: Settings = main_settings_new
-        self._update_all_paths_depending_on_path_project_model_folder()
 
     def _update_all_paths_depending_on_path_project_data_folder(self) -> None:
         list_paths_model_fields_filtered: list[str] = [path_model_field 
@@ -139,7 +139,3 @@ def get_project_settings() -> ProjectPaths:
     if _current_project_paths is None:
         raise TypeError
     return _current_project_paths
-        
-def setup_project_paths(path_project_data_folder: Path, path_project_model_folder: Path) -> None:
-    global _current_project_paths
-    _current_project_paths = ProjectPaths(path_project_data_folder, path_project_model_folder)

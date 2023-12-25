@@ -77,10 +77,11 @@ def test_save_train_info_pickle(prerequisites_save_train_info: Path, project_pat
     :type prerequisites_save_train_info: Path
     """
     project_name = 'TEST'
+    mocked_s3 = Mock()
     path_train_info = prerequisites_save_train_info
     project_paths._path_project_model_folder = Path(prerequisites_save_train_info).parent
     
-    save_train_info(project_name, project_paths=project_paths, s3_settings=s3_settings, main_settings=main_settings)
+    save_train_info(project_name, s3_usage=False, s3c_main=mocked_s3, project_paths=project_paths, s3_settings=s3_settings, main_settings=main_settings)
     
     # we have to combine a pathlib and a string object...
     path_parent_train_info = path_train_info.parent
@@ -98,10 +99,11 @@ def test_save_train_info_entries(prerequisites_save_train_info: Path, project_pa
     :type prerequisites_save_train_info: Path
     """
     project_name = 'TEST'
+    mocked_s3 = Mock()
     path_train_info = prerequisites_save_train_info
     project_paths._path_project_model_folder = Path(prerequisites_save_train_info).parent
     
-    save_train_info(project_name, project_paths=project_paths, s3_settings=s3_settings, main_settings=main_settings)
+    save_train_info(project_name, s3_usage=False, s3c_main=mocked_s3, project_paths=project_paths, s3_settings=s3_settings, main_settings=main_settings)
     
     with open(str(path_train_info), 'rb') as file:
         train_info = pickle.load(file)
@@ -120,10 +122,11 @@ def test_save_train_info_entries(prerequisites_save_train_info: Path, project_pa
 def test_save_tain_info_return_value(prerequisites_save_train_info: Path, project_paths: ProjectPaths,
                                      s3_settings: Settings, main_settings: Settings):
     project_name = 'TEST'
+    mocked_s3 = Mock()
     path_train_info = prerequisites_save_train_info
     project_paths._path_project_model_folder = Path(prerequisites_save_train_info).parent
     
-    assert save_train_info(project_name, project_paths=project_paths, s3_settings=s3_settings, main_settings=main_settings) is None
+    assert save_train_info(project_name, s3_usage=False, s3c_main=mocked_s3, project_paths=project_paths, s3_settings=s3_settings, main_settings=main_settings) is None
     
 
 def test_save_train_info_s3_usage(prerequisites_save_train_info: Path, project_paths: ProjectPaths,

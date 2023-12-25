@@ -1,23 +1,22 @@
-import argparse
-import requests
+from typing import Any
 import shutil
 import os
 import glob
-import json
-import yaml
 import pandas as pd
 from utils.paths import path_file_running
-import traceback
 import pickle
-import datetime
 from utils.s3_communication import S3Communication
 from pathlib import Path
 from utils.paths import ProjectPaths
-from utils.settings import Settings
+from utils.settings import MainSettings, S3Settings
 
 
-def save_train_info(project_name, s3_usage=False, s3c_main: S3Communication = None, main_settings: Settings = None, 
-                    s3_settings: Settings = None, project_paths: ProjectPaths = None):
+def save_train_info(project_name: str, 
+                    s3_usage: bool, 
+                    s3c_main: S3Communication, 
+                    main_settings: MainSettings, 
+                    s3_settings: S3Settings, 
+                    project_paths: ProjectPaths):
     """
     This function stores all information of the training to a dictionary and saves it into a pickle file.
     Read it via:
@@ -37,7 +36,7 @@ def save_train_info(project_name, s3_usage=False, s3c_main: S3Communication = No
         s3c_main.download_files_in_prefix_to_dir(project_prefix + '/input/annotations', str(project_paths.path_folder_source_annotation))
         s3c_main.download_files_in_prefix_to_dir(project_prefix + '/input/pdfs/training', str(project_paths.path_folder_source_pdf))
     
-    dir_train = {}
+    dir_train: dict[str, Any] = {}
     dir_train.update({'project_name': project_name})
     # dir_train.update({'train_settings': project_settings})
     dir_train.update({'train_settings': main_settings})

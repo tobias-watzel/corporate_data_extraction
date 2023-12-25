@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil
 import pandas as pd
 from utils.s3_communication import S3Communication
-from utils.settings import get_s3_settings, S3Settings, Settings
+from utils.settings import get_s3_settings, S3Settings, MainSettings
 
 # S3Settings = get_s3_settings()
 
@@ -46,7 +46,7 @@ class S3Controller():
                  interim_bucket: S3Communication,
                  settings: S3Settings):
         self.main_bucked = main_bucket
-        self.interim_bucket = interim_bucked
+        self.interim_bucket = interim_bucket
         self.settings = settings
         
     def _create_prefix_path_for_download_in_s3(self):
@@ -75,7 +75,7 @@ class S3Controller():
 def download_data_from_s3_main_bucket_to_local_folder_if_required(s3_bucket: S3Communication,
                                                                   path_s3_with_prefix_folder: Path,
                                                                   path_local_folder: Path,
-                                                                  main_settings: Settings):
+                                                                  main_settings: MainSettings):
     if main_settings.general.s3_usage:
         s3_bucket.download_files_in_prefix_to_dir(path_s3_with_prefix_folder, 
                                                   path_local_folder)
@@ -84,7 +84,7 @@ def download_data_from_s3_main_bucket_to_local_folder_if_required(s3_bucket: S3C
 def upload_data_from_local_folder_to_s3_interim_bucket_if_required(s3_bucket: S3Communication,
                                                                    path_local_folder: Path,
                                                                    path_s3_with_prefix_folder: Path,
-                                                                   main_settings: Settings):
+                                                                   main_settings: MainSettings):
     if main_settings.general.s3_usage:
         s3_bucket.upload_files_in_dir_to_prefix(path_local_folder, 
                                                 path_s3_with_prefix_folder) 

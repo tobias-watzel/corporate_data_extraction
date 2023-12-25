@@ -60,4 +60,4 @@ class XlsToCsvConverter(Converter):
         print(f'Converting {path_file} to csv-format')
         df_read_excel: pd.DataFrame = pd.read_excel(path_file, engine='openpyxl')
         path_csv_file: Path = self._path_folder_destination / 'aggregated_annotation.csv'
-        df_read_excel.to_csv(path_csv_file, index=None, header=True)
+        df_read_excel.to_csv(path_csv_file, index=False, header=True)

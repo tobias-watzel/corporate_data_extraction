@@ -236,7 +236,7 @@ def test_train_on_pdf_correct_input_s3_usage(s3_usage: typing.Union[str, None]):
         
         assert mocked_input() == s3_usage
         if s3_usage == 'Y':
-            assert mocked_s3_communication.call_count == 2
+            assert mocked_s3_communication.call_count == 4
             
             mocked_s3_communication.return_value.download_file_from_s3.assert_called_once()
 
