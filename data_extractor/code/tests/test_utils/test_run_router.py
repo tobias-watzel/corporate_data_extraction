@@ -15,9 +15,9 @@ from _pytest.capture import CaptureFixture
 def router(main_settings: MainSettings, s3_settings: S3Settings, project_paths: ProjectPaths):
     dict_general_settings = {'project_name': 'TEST',
                              'ext_ip': '0.0.0.0', 
-                             'ext_port': '8000',
+                             'ext_port': 8000,
                              'infer_ip': '0.0.0.1', 
-                             'infer_port': '8000'}
+                             'infer_port': 8000}
 
     with (patch.object(main_settings, 'general', Mock(**dict_general_settings))):
         router = Router(main_settings=main_settings, s3_settings=s3_settings, project_paths=project_paths)
@@ -35,9 +35,9 @@ def server(prerequisites_generate_text) -> requests_mock.mocker.Mocker:
     :rtype: requests_mock.mocker.Mocker
     """
     extraction_ip = '0.0.0.0'
-    extraction_port = '8000'
+    extraction_port = 8000
     inference_ip = '0.0.0.1'
-    inference_port = '8000'
+    inference_port = 8000
     server_address_extraction = f'http://{extraction_ip}:{extraction_port}'
     server_address_inference = f'http://{inference_ip}:{inference_port}'
     
@@ -63,7 +63,7 @@ def test_run_router_extraction_liveness_up(router: Router,
                                            return_value_expected: bool,
                                            capsys: typing.Generator[CaptureFixture[str], None, None]): 
     extraction_ip = '0.0.0.0'
-    extraction_port = '8000'
+    extraction_port = 8000
     server_address_node = f'http://{extraction_ip}:{extraction_port}/liveness'
     
     server.get(server_address_node, status_code=status_code)
@@ -83,7 +83,7 @@ def test_run_router_extraction_server_down(router: Router,
     :type server: requests_mock.mocker.Mocker
     """
     extraction_ip = '0.0.0.0'
-    extraction_port = '8000'
+    extraction_port = 8000
     server_address_node = f'http://{extraction_ip}:{extraction_port}/extract'
     server.get(server_address_node, status_code=-1)
     
@@ -100,7 +100,7 @@ def test_run_router_extraction_curation_server_down(router: Router,
     :type server: requests_mock.mocker.Mocker
     """
     extraction_ip = '0.0.0.0'
-    extraction_port = '8000'
+    extraction_port = 8000
     server_address_node = f'http://{extraction_ip}:{extraction_port}/curate'
     
     server.get(server_address_node, status_code=-1)      
@@ -119,7 +119,7 @@ def test_run_router_inference_liveness(router: Router,
                                        return_value_expected: bool,
                                        capsys: typing.Generator[CaptureFixture[str], None, None]):
     inference_ip = '0.0.0.1'
-    inference_port = '8000'
+    inference_port = 8000
     server_address_node = f'http://{inference_ip}:{inference_port}/liveness'
 
     server.get(server_address_node, status_code=status_code)
@@ -144,7 +144,7 @@ def test_run_router_relevance_training(router: Router,
                                        return_value_expected: bool, 
                                        capsys: typing.Generator[CaptureFixture[str], None, None]):
     inference_ip = '0.0.0.1'
-    inference_port = '8000'
+    inference_port = 8000
     server_address_node = f'http://{inference_ip}:{inference_port}/train_relevance'
 
     with patch.object(main_settings, 'train_relevance', Mock(train=train_relevance)):
@@ -177,7 +177,7 @@ def test_run_router_kpi_training(router: Router,
                                  return_value_expected: bool,
                                  capsys: typing.Generator[CaptureFixture[str], None, None]):
     inference_ip = '0.0.0.1'
-    inference_port = '8000'
+    inference_port = 8000
     server_address_node_infer_relevance = f'http://{inference_ip}:{inference_port}/infer_relevance'
     server_address_node_train_kpi = f'http://{inference_ip}:{inference_port}/train_kpi'
         

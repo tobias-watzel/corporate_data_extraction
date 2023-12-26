@@ -1,7 +1,9 @@
+from utils.settings import S3Settings, MainSettings
 from utils.settings_handler import SettingsHandler
 from tests.utils_test import project_tests_root
 import pytest
 from unittest.mock import patch
+from pathlib import Path
 
 @pytest.fixture()
 def settings_handler():
@@ -22,5 +24,20 @@ def test_read_settings_files(settings_handler: SettingsHandler):
         mocked_open.assert_any_call(str(path_settings_main))
         mocked_open.assert_any_call(str(path_settings_s3))
         
+
+def test_save_settings_file():
+    pass
+
+
+def test_set_settings():
+    pass
+
+
+def test_read_setting_file(settings_handler, path_folder_root_testing):
+
+    path_root = path_folder_root_testing
+    path_settings_main = path_root / 'data' / 'TEST' / 'settings.yaml'
+    
+    settings_handler._read_setting_file(path_settings_main)
         
     

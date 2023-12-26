@@ -1,17 +1,10 @@
 from pathlib import Path
 import pytest
-from unittest.mock import patch, Mock, MagicMock, call
+from unittest.mock import patch, Mock, call
 import shutil
 import train_on_pdf
-import requests
-import requests_mock
-import sys
-import yaml
-import os
-import traceback
 from tests.utils_test import modify_project_settings
-from utils.settings import MainSettings, S3Settings, MainBucketSettings, InterimBucketSettings
-# from tests.test_utils.test_running import prerequisite_running
+from utils.settings import MainSettings
 
 # types
 import typing

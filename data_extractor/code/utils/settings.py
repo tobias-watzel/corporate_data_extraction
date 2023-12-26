@@ -9,9 +9,9 @@ class Settings():
 class General(BaseSettings):
     project_name: str = 'TEST'
     ext_ip: str = '172.30.15.68'
-    ext_port: str = '4000'
+    ext_port: int = 4000
     infer_ip: str = '172.30.88.213'
-    infer_port: str = '6000'
+    infer_port: int = 6000
     rb_ip: str = '172.30.224.91'
     rb_port: int = 8000
     delete_interim_files: bool = True
@@ -54,6 +54,7 @@ class Processor(BaseSettings):
 
 class Model(BaseSettings):
     model_config = SettingsConfigDict(protected_namespaces=('settings_',))
+    model_lang_model: str | None = None
     model_layer_dims: List[int] = [768, 2]
     model_lm_output_types: List[str] = ['per_sequence']
     
@@ -74,6 +75,8 @@ class Training(BaseSettings):
 
 class TrainRelevance(BaseSettings):
     base_model: str = 'roberta-base'
+    tokenizer_base_model: str = 'roberta-base'
+    tokenizer_pretrained_model_name_or_path: str = 'roberta-base'
     input_model_name: str | None = '' 
     output_model_name: str = 'TEST_1'
     train: bool = True
