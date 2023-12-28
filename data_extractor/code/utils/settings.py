@@ -15,7 +15,7 @@ class General(BaseSettings):
     rb_ip: str = '172.30.224.91'
     rb_port: int = 8000
     delete_interim_files: bool = True
-    s3_usage: bool | None = None
+    s3_usage: bool = False
 
 class DataExport(BaseSettings):
     enable_db_export: bool = False

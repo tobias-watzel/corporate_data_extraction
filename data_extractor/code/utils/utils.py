@@ -69,7 +69,10 @@ def save_train_info(project_name: str,
 
 
 
-def generate_text_3434(project_name, s3_usage, s3_settings, project_paths: ProjectPaths):
+def generate_text_3434(project_name: str,
+                       s3_usage: bool,
+                       s3_settings: S3Settings, 
+                       project_paths: ProjectPaths):
     """
     This function merges all infer relevance outputs into one large file, which is then 
     used to train the kpi extraction model.
@@ -81,13 +84,13 @@ def generate_text_3434(project_name, s3_usage, s3_settings, project_paths: Proje
     """
     if s3_usage:
         s3c_main = S3Communication(
-            s3_endpoint_url=os.getenv(s3_settings['main_bucket']['s3_endpoint']),
-            aws_access_key_id=os.getenv(s3_settings['main_bucket']['s3_access_key']),
-            aws_secret_access_key=os.getenv(s3_settings['main_bucket']['s3_secret_key']),
-            s3_bucket=os.getenv(s3_settings['main_bucket']['s3_bucket_name']),
+            s3_endpoint_url=os.getenv(s3_settings.main_bucket.s3_endpoint),
+            aws_access_key_id=os.getenv(s3_settings.main_bucket.s3_access_key),
+            aws_secret_access_key=os.getenv(s3_settings.main_bucket.s3_secret_key),
+            s3_bucket=os.getenv(s3_settings.main_bucket.s3_bucket_name),
         )
         # Download infer relevance files
-        prefix_rel_infer = str(Path(s3_settings['prefix']) / project_name / 'data' / 'output' / 'RELEVANCE' / 'Text')
+        prefix_rel_infer = str(Path(s3_settings.prefix) / project_name / 'data' / 'output' / 'RELEVANCE' / 'Text')
         s3c_main.download_files_in_prefix_to_dir(prefix_rel_infer, str(project_paths.path_folder_relevance))
         
     with open(str(project_paths.path_folder_text_3434) + r"/text_3434.csv", "w") as file_out:
@@ -112,12 +115,12 @@ def generate_text_3434(project_name, s3_usage, s3_settings, project_paths: Proje
     
     if s3_usage:
         s3c_interim = S3Communication(
-            s3_endpoint_url=os.getenv(s3_settings['interim_bucket']['s3_endpoint']),
-            aws_access_key_id=os.getenv(s3_settings['interim_bucket']['s3_access_key']),
-            aws_secret_access_key=os.getenv(s3_settings['interim_bucket']['s3_secret_key']),
-            s3_bucket=os.getenv(s3_settings['interim_bucket']['s3_bucket_name']),
+            s3_endpoint_url=os.getenv(s3_settings.interim_bucket.s3_endpoint),
+            aws_access_key_id=os.getenv(s3_settings.interim_bucket.s3_access_key),
+            aws_secret_access_key=os.getenv(s3_settings.interim_bucket.s3_secret_key),
+            s3_bucket=os.getenv(s3_settings.interim_bucket.s3_bucket_name),
         )
-        project_prefix_text3434 = str(Path(s3_settings['prefix']) / project_name / 'data' / 'interim' / 'ml')
+        project_prefix_text3434 = str(Path(s3_settings.prefix) / project_name / 'data' / 'interim' / 'ml')
         s3c_interim.upload_file_to_s3(filepath=str(project_paths.path_folder_text_3434) + r"/text_3434.csv", s3_prefix=project_prefix_text3434, s3_key='text_3434.csv')
     
     return True

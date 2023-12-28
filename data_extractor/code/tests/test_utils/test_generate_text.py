@@ -7,7 +7,7 @@ from utils.s3_communication import S3Communication
 import train_on_pdf
 import pytest
 from utils.paths import ProjectPaths
-from utils.settings import Settings
+from utils.settings import Settings, S3Settings
 
 # types
 import typing
@@ -73,7 +73,7 @@ def test_generate_text_with_s3(path_folder_temporary: Path, project_paths: Path)
     }
     
     with (patch('utils.utils.S3Communication', Mock(spec=S3Communication)) as mocked_s3):
-        generate_text_3434(project_name, True, mocked_s3_settings, project_paths=project_paths)
+        generate_text_3434(project_name, True, S3Settings(**mocked_s3_settings), project_paths=project_paths)
         
     # check for calls
     mocked_s3.assert_any_call(s3_endpoint_url='S3_END_MAIN',
