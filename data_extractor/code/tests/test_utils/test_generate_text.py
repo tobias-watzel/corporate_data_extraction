@@ -1,5 +1,5 @@
 from pathlib import Path
-from utils.utils import generate_text_3434
+from utils.merger import generate_text_3434
 from tests.utils_test import write_to_file
 import shutil
 from unittest.mock import patch, Mock, call
@@ -72,7 +72,7 @@ def test_generate_text_with_s3(path_folder_temporary: Path, project_paths: Path)
         }
     }
     
-    with (patch('utils.utils.S3Communication', Mock(spec=S3Communication)) as mocked_s3):
+    with (patch('utils.merger.S3Communication', Mock(spec=S3Communication)) as mocked_s3):
         generate_text_3434(project_name, True, S3Settings(**mocked_s3_settings), project_paths=project_paths)
         
     # check for calls

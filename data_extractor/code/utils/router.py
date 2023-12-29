@@ -1,6 +1,6 @@
 import requests
 from utils.settings import S3Settings, MainSettings, Settings
-from utils.utils import generate_text_3434
+from utils.merger import generate_text_3434
 from utils.paths import ProjectPaths
 import traceback
 import json
