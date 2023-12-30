@@ -48,7 +48,35 @@ class Merger():
         path_file_related_s3: Path = Path(self.s3_settings.prefix) / self.project_paths.string_project_name / 'data' / 'output' / 'RELEVANCE' / 'Text'
         self.s3_communication_main.download_files_in_prefix_to_dir(str(path_file_related_s3), 
                                                                    str(self.project_paths.path_folder_relevance))
-        
+
+    def _upload_inference_related_files_to_s3(self) -> None:
+        path_file_upload_to_s3: Path = Path(self.s3_settings.prefix) / self.project_paths.string_project_name / 'data' / 'interim' / 'ml' / 'text_3434.csv'
+        self.s3_communication_interim.upload_file_to_s3(filepath=str(path_file_upload_to_s3), 
+                                                        s3_prefix=str(path_file_upload_to_s3.parent), 
+                                                        s3_key=str(path_file_upload_to_s3.name))
+    
+
+    def _weird_writing_stuff(self) -> None:
+
+        with open(str(self.project_paths.path_folder_text_3434) + r"/text_3434.csv", "w") as file_out:
+            very_first = True
+            rel_inf_list = list(glob.iglob(str(self.project_paths.path_folder_relevance) + r'/*.csv'))
+        if len(rel_inf_list) == 0:
+            print("No relevance inference results found.")
+            return False
+        else:
+            try:
+                for filepath in rel_inf_list: 
+                    print(filepath)
+                    with open(filepath) as file_in:
+                        first = True
+                        for l in file_in:
+                            if(very_first or not first):
+                                file_out.write(l)
+                            first = False
+                        very_first = False
+            except Exception:
+                return False
 
 
 def generate_text_3434(project_name: str,
