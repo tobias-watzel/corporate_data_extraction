@@ -105,6 +105,7 @@ def main() -> None:
         f.close()
         project_prefix = s3_settings.prefix + "/" + project_name + '/data'
         # init s3 connector
+        
         s3c_main = S3Communication(
                                     s3_endpoint_url=os.getenv(s3_settings.main_bucket.s3_endpoint),
                                     aws_access_key_id=os.getenv(s3_settings.main_bucket.s3_access_key),
